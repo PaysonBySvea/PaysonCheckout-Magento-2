@@ -1,8 +1,0 @@
-<?xml version="1.0" ?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
-	<group id="default">
-		<job instance="Eastlane\PaysonCheckout2\Cron\DeleteOldResources" method="execute" name="eastlane_paysoncheckout2_deleteoldresources">
-			<schedule>0 3 * * *</schedule>
-		</job>
-	</group>
-</config>

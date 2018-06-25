@@ -1,0 +1,79 @@
+<?xml version="1.0" ?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<css src="PaysonAB_PaysonCheckout2::css/payson.css"/>
+	</head>
+	<update handle="checkout_cart_index"/>
+	<body>
+		<referenceContainer name="page.messages">
+			<block class="Magento\Checkout\Block\Cart\ValidationMessages" name="checkout.cart.validationmessages"  ifconfig="payment/paysoncheckout2/enabled" />
+		</referenceContainer>
+		<referenceContainer htmlClass="payson-checkout-cart-container" htmlTag="div" name="checkout.cart.container">
+			<block class="PaysonAB\PaysonCheckout2\Block\Payson\Index" name="payson.index.title" before="-" template="PaysonAB_PaysonCheckout2::payson/paysonTitle.phtml" />
+		</referenceContainer>
+		<referenceContainer htmlClass="payson-cart-summary" htmlTag="div" name="cart.summary"/>
+		<!-- PaysonAB Payson checkout2 content area -->
+		<container htmlClass="payson-content" htmlTag="div" name="payson.content">
+			<container htmlClass="payson-shipping-method" htmlTag="div" name="payson.shipping.method">
+				<block class="Magento\Framework\View\Element\Template" name="shipping.method.title" template="Magento_Theme::text.phtml"  ifconfig="payment/paysoncheckout2/enabled">
+					<arguments>
+						<argument name="text" translate="true" xsi:type="string">Select shipping method</argument>
+						<argument name="tag" xsi:type="string">h2</argument>
+						<argument name="css_class" xsi:type="string">shipping title</argument>
+					</arguments>
+				</block>
+			</container>
+			<container htmlClass="payson-payment-method" htmlTag="div" name="payson.payment.method">
+				<block class="PaysonAB\PaysonCheckout2\Block\Payson\Index" name="payson.index" template="PaysonAB_PaysonCheckout2::payson/index.phtml"  ifconfig="payment/paysoncheckout2/enabled"/>
+			</container>
+		</container>
+		<!-- PaysonAB Payson checkout2 content area -->
+		<!-- Remove Tax and Estimation-->
+		<referenceBlock name="checkout.cart.shipping">
+			<arguments>
+				<argument name="jsLayout" xsi:type="array">
+					<item name="components" xsi:type="array">
+						<item name="block-summary" xsi:type="array">
+							<item name="children" xsi:type="array">
+								<item name="block-shipping" xsi:type="array">
+									<item name="children" xsi:type="array">
+										<item name="address-fieldsets" xsi:type="array">
+											<item name="children" xsi:type="array">
+												<item name="city" xsi:type="array">
+													<item name="visible" xsi:type="boolean">false</item>
+												</item>
+												<item name="country_id" xsi:type="array">
+													<item name="visible" xsi:type="boolean">false</item>
+												</item>
+												<item name="region_id" xsi:type="array">
+													<item name="visible" xsi:type="boolean">false</item>
+												</item>
+												<item name="region" xsi:type="array">
+													<item name="visible" xsi:type="boolean">false</item>
+												</item>
+												<item name="postcode" xsi:type="array">
+													<item name="visible" xsi:type="boolean">false</item>
+												</item>
+											</item>
+										</item>
+									</item>
+								</item>
+							</item>
+						</item>
+					</item>
+				</argument>
+			</arguments>
+		</referenceBlock>
+		<!-- Remove Tax and Estimation-->
+		<!-- Move Element -->
+		<move before="cart.summary" destination="checkout.cart.items" element="checkout.cart.coupon"/>
+		<move after="-" destination="checkout.cart.items" element="cart.summary"/>
+		<move after="shipping.method.title" destination="payson.shipping.method" element="checkout.cart.shipping"/>
+		<move destination="content" element="payson.content"/>
+		<!-- Move Element -->
+		<!-- Remove Element-->
+		<referenceBlock name="checkout.cart.summary.title" remove="true"/>
+		<referenceBlock name="checkout.cart.methods.bottom" remove="true"/>
+		<!-- Remove Element-->
+	</body>
+</page>
