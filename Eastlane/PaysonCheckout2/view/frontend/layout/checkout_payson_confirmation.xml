@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+		<css src="Eastlane_PaysonCheckout2::css/payson.css"/>
+	</head>
+	<update handle="checkout_onepage_success"/>	
+ 	<referenceContainer name="content">
+    	<block class="Eastlane\PaysonCheckout2\Block\Payson\Confirmation" name="payson.confirmation" before="-" template="Eastlane_PaysonCheckout2::payson/confirmation.phtml" ifconfig="payment/paysoncheckout2/enabled"/>
+    </referenceContainer>
+	<referenceBlock name="page.main.title" remove="true"/>
+	<referenceContainer name="order.success.additional.info">
+		<block class="Eastlane\PaysonCheckout2\Block\Google\Tagmanager" name="google.tag.manager" template="Eastlane_PaysonCheckout2::google/tag-manager.phtml" ifconfig="payment/paysoncheckout2/enabled"/>
+	</referenceContainer>
+</page>

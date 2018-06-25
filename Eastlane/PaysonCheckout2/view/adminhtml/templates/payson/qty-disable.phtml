@@ -1,0 +1,13 @@
+<script type="text/javascript">
+    require([
+        'jquery',
+        'prototype'
+    ], function($) {
+        'use strict';
+        var submitButtons = $$(".adminhtml-order-shipment-new input.input-text.admin__control-text.qty-item," +
+            ".adminhtml-order-shipment-new input.input-text.admin__control-text," +
+            ".sales-order-invoice-new input.input-text.admin__control-text.qty-input");
+
+        submitButtons.each(function (elem) {elem.disabled=true;elem.addClassName('disabled');});
+    });
+</script>

@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="Eastlane\PaysonCheckout2\Api\PaysoncheckoutQueueRepositoryInterface" type="Eastlane\PaysonCheckout2\Model\PaysoncheckoutQueueRepository"/>
+	<preference for="Eastlane\PaysonCheckout2\Api\Data\PaysoncheckoutQueueInterface" type="Eastlane\PaysonCheckout2\Model\PaysoncheckoutQueue"/>
+	<preference for="Eastlane\PaysonCheckout2\Api\Data\PaysoncheckoutQueueSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+
+	<virtualType name="EastlanePaysonLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers"  xsi:type="array">
+                <item name="debug" xsi:type="object">Eastlane\PaysonCheckout2\Logger\Handler\Payson</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Eastlane\PaysonCheckout2\Helper\Data">
+        <arguments>
+            <argument name="paysonLogger" xsi:type="object">EastlanePaysonLogger</argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,47 @@
+.payson-checkout-cart-container{ float: left; width: 100%; }
+.payson-checkout-cart-container .cart.title{text-align: center;margin:  0;font-weight: 600;}
+
+.cart.actions{ text-align: right; }
+.cart.actions a.action{background-image: none; background: #eeeeee; border: 1px solid #cccccc; color: #333333; cursor: pointer; display: inline-block; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 600; margin: 0; padding: 7px 15px; font-size: 1.4rem; line-height: 1.6rem; box-sizing: border-box; vertical-align: middle;}
+
+.block.discount{ width: 70%; float: left; }
+.discount .title{}
+.discount .title strong{color: #1979c3;display: inline-block;text-decoration: none;margin:  0;font-weight: normal;}
+.discount .title strong::after{-webkit-font-smoothing: antialiased; font-size: 14px; line-height: 16px; color: #8f8f8f; content: '\e622'; font-family: 'luma-icons'; margin: 0 0 0 10px; vertical-align: middle; display: inline-block; font-weight: normal; overflow: hidden; speak: none; text-align: center;}
+.discount.active .title strong::after{ content: '\e621';}
+.discount .content .fieldset.coupon{ width: 500px; }
+.discount .content .fieldset.coupon .field{ width: calc(100% - 150px); margin: 0; display: inline-block; vertical-align: top; }
+.discount .content .fieldset.coupon .actions-toolbar{ width: 150px; display: inline-block; padding-top: 28px; vertical-align: top;  }
+
+.payson-cart-summary{ width: 30%; float: left; }
+.payson-cart-summary .cart-totals{ border: 0; }
+
+.payson-content{ float: left; width: 100%; }
+.payson-shipping-method, .payson-payment-method{ width:70%; margin: 0 auto;}
+.payson-shipping-method .shipping.title{ text-align: center; }
+.payson-shipping-method .block.shipping{ border: 1px solid #dadada; padding: 20px 25px;}
+.payson-payment-method .payment.title{ text-align: center; }
+.payson-payment-method #payson-checkout2{ border: 1px solid #dadada; padding: 20px 0px 0;}
+
+.payson-button-action{text-align:  center;padding: 40px 0 50px;}
+.payson-button-action button.btn{border: 0;border-radius: 3px;width: 100%;max-width: 200px;padding: 16px;font-size: 20px;min-height: 59px;background: #1e3a79;color: #fff;font-weight:  normal;margin: 0 5px;}
+
+.payson-content #block-shipping .title,.payson-content #block-shipping form#shipping-zip-form{display: none; }
+.payson-shipping-method #block-summary{display: block!important; }
+
+.checkout-payson-confirmation #paysonContainer{ max-width: 600px; margin:0 auto; }
+.checkout-payson-confirmation .checkout-success, .checkout-payson-confirmation #registration{ max-width: 600px; margin: 0 auto; text-align: center;}
+.checkout-payson-confirmation .checkout-success .actions-toolbar{ text-align: center; }
+.checkout-payson-confirmation .checkout-success .actions-toolbar .primary{ float: none; }
+
+@media (max-width: 767px) {
+    .cart.actions a.action, .cart.actions button.action{ text-align: center; width: 100%; margin-bottom: 5px; }
+    .block.discount{ width: 100%; margin: 20px 0; }
+    .payson-cart-summary{ width: 100%; }
+    .discount .content .fieldset.coupon{ width: 100% }
+    .payson-shipping-method .shipping.title, .payson-payment-method .payment.title{ font-size: 2rem }
+    .payson-shipping-method, .payson-payment-method{ width: 100%; }
+    .payson-payment-method #payson-checkout2{ padding: 0 0 20px; border: 0; }
+    .payson-button-action button.btn{ max-width: 100%; margin-bottom: 5px; }
+    .cart-totals{ padding: 0 25px; }
+}

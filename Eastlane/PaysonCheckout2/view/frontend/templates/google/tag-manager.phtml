@@ -1,0 +1,24 @@
+<?php
+$actionField = $block->actionField();
+$products = $block->getProducts();
+?>
+<?php /* $block->escapeHtml($_product->getId()) */ ?>
+<script type="text/javascript">
+    require([
+        'jquery',
+    ], function ($) {
+        'use strict';
+
+        if(typeof dataLayer != 'undefined')
+        {
+            dataLayer.push({
+                'ecommerce': {
+                    'purchase': {
+                        'actionField': <?php echo $actionField ?>,
+                        'products': <?php echo $products ?>
+                    }
+                }
+            });
+        }
+    });
+</script>

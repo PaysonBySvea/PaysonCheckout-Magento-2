@@ -1,0 +1,21 @@
+{
+    "name": "eastlane/module-paysoncheckout2",
+    "description": "Eastlane Team",
+    "license": "proprietary",
+    "authors": [
+        {
+            "email": "info@eastlane.se",
+            "name": "Eastlane"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Eastlane\\PaysonCheckout2\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}

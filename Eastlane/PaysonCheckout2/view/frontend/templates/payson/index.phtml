@@ -1,0 +1,76 @@
+<?php
+$auth = $block->getAuthentication();
+$response = $block->getIframeSnippet();
+?>
+<?php if(!is_null($auth)): ?>
+	<div class="payson-error">
+		<?php echo $auth; ?>
+	</div>
+<?php else: ?>
+	<?php if($response): ?>
+		<div class="payson-payment-method">
+			<h2 class="payment title"><?php echo __('Address and payment options') ?> </h2>
+		</div>
+		<div id="payson-checkout2">
+			<?php echo $response; ?>
+		</div>
+		<!--<div class="payson-button-action">
+			<button id="LockButton" type="button" class="btn"><?php /*echo __('Lock Cart') */?></button>
+			<button id="ReleaseButton" type="button" class="btn"><?php /*echo __('Release Cart') */?></button>
+		<div>-->
+		<script type="text/javascript">
+			require([
+				'jquery',
+				'mage/url',
+				'Magento_Checkout/js/model/quote',
+				'Magento_Checkout/js/checkout-data',
+			], function ($, url, quote, checkoutData) {
+				'use strict';
+				$(document).on('click', '#co-shipping-method-form .radio' ,function (event){
+					var id=$(this).attr('id');
+					$.ajax({
+						url: url.build('checkout/payson/paysonRespone'),
+						type:'POST',
+						showLoader: false,
+						dataType:'json',
+						data: {id:id,shipping_method:quote.shippingMethod(),total:quote.totals()},
+						success:function(response){
+							$('#payson-checkout2').html(response.success);
+						}
+					});
+				});
+				checkoutData.setSelectedShippingRate('<?= $block->getShippingMethod() ?>');
+
+				/*function sendLockDown() {
+					var iframe = document.getElementById('paysonIframe');
+					iframe.contentWindow.postMessage('lock', '*');
+				}
+
+				function sendRelease() {
+					var iframe = document.getElementById('paysonIframe');
+					iframe.contentWindow.postMessage('release', '*');
+				}
+
+				function sendUpdate() {
+					var iframe = document.getElementById('paysonIframe');
+					iframe.contentWindow.postMessage('updatePage', '*');
+				}
+
+				$(document).ready(function () {
+					$(".action.update").click(function () {
+						sendUpdate();
+					});
+
+					$("#LockButton").click(function () {
+						sendLockDown();
+					});
+
+					$("#ReleaseButton").click(function () {
+						sendRelease();
+					});
+				});*/
+			});
+		</script>
+	<?php endif; ?>
+<?php endif; ?>
+
