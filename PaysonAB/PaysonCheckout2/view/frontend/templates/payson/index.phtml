@@ -26,19 +26,31 @@ $response = $block->getIframeSnippet();
 				'Magento_Checkout/js/checkout-data',
 			], function ($, url, quote, checkoutData) {
 				'use strict';
+				$( document ).ready(function() {
+					var existClass = setInterval(function() {
+						if ($('.totals.shipping').length) {
+							clearInterval(existClass);
+							paysonIframeLoad();
+						}
+					}, 1);
+				});
 				$(document).on('click', '#co-shipping-method-form .radio' ,function (event){
-					var id=$(this).attr('id');
+					paysonIframeLoad();
+				});
+
+				function paysonIframeLoad(){
+					var id = $(this).attr('id');
 					$.ajax({
 						url: url.build('checkout/payson/paysonRespone'),
 						type:'POST',
-						showLoader: false,
+						showLoader: true,
 						dataType:'json',
-						data: {id:id,shipping_method:quote.shippingMethod(),total:quote.totals()},
+						data: {id:id, shipping_method:quote.shippingMethod(), total:quote.totals()},
 						success:function(response){
 							$('#payson-checkout2').html(response.success);
 						}
 					});
-				});
+				}
 				checkoutData.setSelectedShippingRate('<?= $block->getShippingMethod() ?>');
 
 				/*function sendLockDown() {
@@ -73,4 +85,3 @@ $response = $block->getIframeSnippet();
 		</script>
 	<?php endif; ?>
 <?php endif; ?>
-
