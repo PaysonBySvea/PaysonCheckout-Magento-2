@@ -1,4 +1,4 @@
-# Payson Checkout 2.0 for Magento 2
+# Payson Checkout for Magento 2
 ==================
 ## Magento Marketplace
 * https://marketplace.magento.com/paysonab-module-paysoncheckout2.html
