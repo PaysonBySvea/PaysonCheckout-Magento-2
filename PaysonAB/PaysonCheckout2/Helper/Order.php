@@ -584,9 +584,9 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getQuote()
     {
-        if (!isset($this->_quote)) {
+        //if (!isset($this->_quote)) {
             $this->_quote = $this->_checkoutSession->getQuote();
-        }
+        //}
         return $this->_quote;
     }
 
@@ -763,7 +763,8 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
             'city' => $paysonCustomer->city,
             'postcode'=> $paysonCustomer->postalCode,
             'telephone' => $paysonCustomer->phone,
-            'country_id' => $paysonCustomer->countryCode
+            'country_id' => $paysonCustomer->countryCode,
+            'region_id' => 1036
         );
     }
 
@@ -781,7 +782,7 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
             'postcode'=> $defaultAddress->getPostcode(),
             'telephone' => $defaultAddress->getTelephone(),
             'country_id' => $defaultAddress->getCountryId(),
-            'region' => $defaultAddress->getRegion()
+            'region_id' => $defaultAddress->getRegion()
         );
     }
 

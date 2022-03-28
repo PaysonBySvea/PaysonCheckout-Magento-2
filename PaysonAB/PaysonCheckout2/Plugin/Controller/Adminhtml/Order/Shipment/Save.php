@@ -1,6 +1,8 @@
 <?php
 namespace PaysonAB\PaysonCheckout2\Plugin\Controller\Adminhtml\Order\Shipment;
 
+use Magento\Shipping\Controller\Adminhtml\Order\Shipment\Save as Subject;
+
 class Save
 {
     /**
@@ -28,7 +30,7 @@ class Save
      */
     protected $_transaction;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue
+     * @var \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueueFactory
      */
     protected $_paysoncheckoutQueue;
     /**
@@ -45,7 +47,7 @@ class Save
      * @param \PaysonAB\PaysonCheckout2\Helper\Order                $orderHelper
      * @param \Magento\Sales\Model\Service\InvoiceService           $invoiceService
      * @param \Magento\Framework\DB\Transaction                     $transaction
-     * @param \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue   $paysoncheckoutQueue
+     * @param \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueueFactory   $paysoncheckoutQueue
      * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @param \PaysonAB\PaysonCheckout2\Model\Config                $paysonConfig
      */
@@ -56,7 +58,7 @@ class Save
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
         \Magento\Framework\DB\Transaction $transaction,
-        \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue $paysoncheckoutQueue,
+        \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueueFactory $paysoncheckoutQueue,
         \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig
     ) {
@@ -72,9 +74,11 @@ class Save
     }
 
     /**
-     * @throws bool
+     * @param Subject $subject
+     * @param $result
+     * @return mixed
      */
-    public function afterExecute()
+    public function afterExecute(Subject $subject, $result)
     {
         try {
             if($this->paysonConfig->isEnabled()) {
@@ -90,7 +94,7 @@ class Save
                         if ($checkout->status === 'readyToShip') {
                             $api->ShipCheckout($checkout);
                             /* Order information save in payson table start */
-                            $model = $this->_paysoncheckoutQueue;
+                            $model = $this->_paysoncheckoutQueue->create();
                             $model->load($checkoutId, 'checkout_id');
                             $model->setStatus($checkout->status);
                             $model->setPaysonResponse($this->_orderHelper->convertToJson($checkout));
@@ -121,6 +125,9 @@ class Save
 
                 }
             }
+
+            return $result;
+
         } catch (\Exception $e) {
             $this->_paysonHelper->error($e->getMessage());
         }

@@ -120,12 +120,13 @@ class PaysonApi
         $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $body = substr($result, $header_size);
         $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+
         if ($response_code == 200) {
             return $body;
         } elseif ($response_code == 201) {
             return $result;
         } elseif ($result == false) {
+            //print_r($postfields); die;
             throw new PaysonApiException('Curl error: '.curl_error($ch));
         } else {
             $errors = array();
@@ -139,7 +140,7 @@ class PaysonApi
 
             throw new PaysonApiException("Api errors", $errors);
         }
-
+        curl_close($ch);
     }
 
     private function authorizationHeader()

@@ -45,6 +45,7 @@ class BeforeInvoice implements ObserverInterface
             $message = 'Order place with payson checkout you can not create multiple invoice.';
             foreach ($items as $item)
             {
+                $continue = false;
                 switch ($item->getProduct()->getTypeId()) {
                 case 'simple':
                     if($item->getParentItemId() == null) {
@@ -77,13 +78,16 @@ class BeforeInvoice implements ObserverInterface
                     }
                     break;
                 case 'bundle':
-                    continue;
+                    $continue = true;
                         break;
                 default:
-                    continue;
+                    $continue = true;
                         break;
                 }
+                if($continue == true) {
+                    continue;
             }
         }
     }
+}
 }

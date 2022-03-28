@@ -6,8 +6,10 @@
             'mage/url',
         ], function ($, url) {
             'use strict';
+            var returnURl = url.build('returns')
+            setTimeout(function(){
             $.ajax({
-                url: url.build('returns'),
+                    url: returnURl, //url.build('returns'),
                 type:'POST',
                 dataType:'json',
                 success:function(response){
@@ -16,6 +18,10 @@
                     }
                 }
             });
+            }, 3000);
+
+
+
         });
     </script>
 <?php endif; ?>

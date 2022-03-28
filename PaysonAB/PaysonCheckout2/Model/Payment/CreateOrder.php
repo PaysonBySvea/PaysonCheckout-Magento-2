@@ -59,6 +59,10 @@ class CreateOrder
      * @var \Magento\Framework\Message\ManagerInterface
      */
     protected $_messageManager;
+    /**
+     * @var \Magento\Framework\Event\ManagerInterface
+     */
+    private $eventManager;
 
     /**
      * CreateOrder constructor.
@@ -75,6 +79,7 @@ class CreateOrder
      * @param \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue $paysoncheckoutQueue
      * @param CancelOrder $cancelOrder
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      */
     public function __construct(
@@ -92,6 +97,7 @@ class CreateOrder
         \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue $paysoncheckoutQueue,
         \PaysonAB\PaysonCheckout2\Model\Payment\CancelOrder $cancelOrder,
         \Magento\Sales\Model\OrderFactory $orderFactory,
+        \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Framework\Message\ManagerInterface $messageManager
     )
     {
@@ -109,6 +115,7 @@ class CreateOrder
         $this->_cancelOrder = $cancelOrder;
         $this->_orderFactory = $orderFactory;
         $this->_messageManager = $messageManager;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -124,6 +131,9 @@ class CreateOrder
             $quote = $this->_orderHelper->convertQuoteToOrder($checkoutResponse->customer);
             $orderId = $this->_quoteManagement->placeOrder($quote->getId());
             $order = $this->_orderRepository->get($orderId);
+            $this->eventManager->dispatch('sales_order_save_after', ['order' => $order]);
+//            echo 123;
+//            echo $checkoutResponse->status; die;
             switch ($checkoutResponse->status) {
                 case 'readyToShip':
                     $order->setState(self::STATE_PAYSON_PROCESSING)->setStatus(self::STATE_PAYSON_PROCESSING)

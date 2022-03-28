@@ -196,7 +196,7 @@ class Notification
                 break;
 
             default:
-                continue;
+                break;
             }
             $order->save();
         } catch (\Exception $e) {

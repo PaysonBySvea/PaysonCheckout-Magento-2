@@ -38,7 +38,7 @@ class RefundPaysonAmount implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        if($this->paysonConfig->getCaptureInMagento()) {
+        if ($this->paysonConfig->getCaptureInMagento() && $this->paysonConfig->isEnabled()) {
             $api = $this->_orderHelper->getApi();
             $creditmemo = $observer->getEvent()->getCreditmemo();
             $order = $creditmemo->getOrder();
@@ -92,7 +92,7 @@ class RefundPaysonAmount implements ObserverInterface
                         $this->_paysonHelper->error($e->getMessage());
                     }
                 } else {
-                    $errorMessage = __('Unable to refund order: %1. It must have status "shipped" but itÂ´s current status is: '.$checkout->status, $order_id);
+                    $errorMessage = __('Unable to refund order: %1. It must have status "shipped" but it´s current status is: '.$checkout->status, $order_id);
                     $this->_messageManager->addError(__($errorMessage));
                     $checkoutPaysonUrl = $this->_url->getUrl('*/*/new', ['order_id' => $order->getEntityId()]);
                     $this->_response->setRedirect($checkoutPaysonUrl)->sendResponse();

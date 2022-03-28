@@ -1,10 +1,16 @@
 {
-    "name": "paysonab/module-paysoncheckout2",
+    "name": "paysonab/paysoncheckout2",
     "description": "Payson Checkout 2.0 for M2",
 	"type": "magento2-module",
-    "version": "1.0.4",
-    "license": "OSL-3.0",
-    "require": {},
+    "version": "1.0.7",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "require": {
+        "php": "~7.2.0||~7.3.0||~7.4.0",
+        "magento/framework": "~100.0.4|~100.1.*|~101.0.*|~102.0.*|~103.0.3.*"
+    },
     "autoload": {
         "psr-4": {
             "PaysonAB\\PaysonCheckout2\\": ""

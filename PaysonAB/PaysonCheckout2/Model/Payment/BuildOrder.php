@@ -63,29 +63,33 @@ class BuildOrder
     * @var \Magento\Customer\Api\AddressRepositoryInterface
     */
     protected $_addressRepository;
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
+    private $checkoutSession;
 
     /**
      * BuildOrder constructor.
-     *
-     * @param \Magento\Framework\UrlInterface                     $url
-     * @param \Magento\Framework\App\Response\Http                $response
-     * @param \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi       $paysonApi
-     * @param \PaysonAB\PaysonCheckout2\Helper\Order              $orderHelper
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data               $paysonHelper
-     * @param \Magento\Framework\Stdlib\DateTime\DateTime         $datetime
+     * @param \Magento\Framework\UrlInterface $url
+     * @param \Magento\Framework\App\Response\Http $response
+     * @param \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi $paysonApi
+     * @param \PaysonAB\PaysonCheckout2\Helper\OrderFactory $orderHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $datetime
      * @param \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue $paysoncheckoutQueue
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface  $scopeConfig
-     * @param \Magento\Shipping\Model\Config                      $shipconfig
-     * @param CreateOrder                                         $createOrder
-     * @param \Magento\Framework\Message\ManagerInterface         $messageManager
-     * @param \Magento\Customer\Api\CustomerRepositoryInterface   $customerRepository
-     * @param \Magento\Customer\Api\AddressRepositoryInterface    $addressRepository
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Shipping\Model\Config $shipconfig
+     * @param CreateOrder $createOrder
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
+     * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
+     * @param \Magento\Checkout\Model\Session $checkoutSession
      */
     public function __construct(
         \Magento\Framework\UrlInterface $url,
         \Magento\Framework\App\Response\Http $response,
         \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi $paysonApi,
-        \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
+        \PaysonAB\PaysonCheckout2\Helper\OrderFactory $orderHelper,
         \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
         \Magento\Framework\Stdlib\DateTime\DateTime $datetime,
         \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue $paysoncheckoutQueue,
@@ -94,7 +98,8 @@ class BuildOrder
         CreateOrder $createOrder,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
-        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
+        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
+        \Magento\Checkout\Model\Session $checkoutSession
     ) {
         $this->_url = $url;
         $this->_response = $response;
@@ -109,6 +114,7 @@ class BuildOrder
         $this->_messageManager = $messageManager;
         $this->_customerRepository = $customerRepository;
         $this->_addressRepository = $addressRepository;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -120,6 +126,9 @@ class BuildOrder
         $model = $this->_paysoncheckoutQueue;
         try {
             $quote = $this->setShippingAddress($quote);
+            if (!$quote) {
+                $quote = $this->checkoutSession->getQuote();
+            }
             if ($paysonCheckoutId) {
                 // Already have an active checkout
                 $paysonResponse = $this->_paysonApi->GetCheckout($paysonCheckoutId);
@@ -133,7 +142,7 @@ class BuildOrder
                     $this->_response->setRedirect($checkoutPaysonUrl)->sendResponse();
                     break;
                 case 'created':
-                    $this->_orderHelper->updateCart($paysonCheckoutId);
+                        $this->_orderHelper->create()->updateCart($paysonCheckoutId);
                     $this->_paysonsaveInfo($quote, $paysonCheckoutId, $model);
                     break;
                 case 'expired':
@@ -158,7 +167,7 @@ class BuildOrder
                 $this->_saveQuoteCheckoutId($quote, $paysonCheckoutId);
                 $this->_paysonsaveInfo($quote, $paysonCheckoutId, $model);
                 $this->_savePaymentMethod($quote);
-                $this->_orderHelper->updateCart($paysonCheckoutId);
+                $this->_orderHelper->create()->updateCart($paysonCheckoutId);
             }
         } catch (\Exception $e) {
             $paysonLoggerHelper  = $this->_paysonHelper;
@@ -197,13 +206,13 @@ class BuildOrder
 
             if($collection->getFirstItem()->getId()) {
                 $model->load($collection->getFirstItem()->getId());
-                $model->setPaysonResponse($this->_orderHelper->convertToJson($paysonResponse));
+                $model->setPaysonResponse($this->_orderHelper->create()->convertToJson($paysonResponse));
             } else {
                 $model->setQuoteId($quote->getId());
                 $model->setCheckoutId($paysonCheckoutId);
                 $model->setCreatedAt($this->_datetime->gmtTimestamp());
                 $model->setStatus($paysonResponse->status);
-                $model->setPaysonResponse($this->_orderHelper->convertToJson($paysonResponse));
+                $model->setPaysonResponse($this->_orderHelper->create()->convertToJson($paysonResponse));
             }
             $model->save();
         } catch (\Exception $e){
@@ -220,7 +229,7 @@ class BuildOrder
     protected  function _createCheckoutId()
     {
         try{
-            $this->_orderHelper->loadPaysonApi();
+            $this->_orderHelper->create()->loadPaysonApi();
             /*
             * Step 2 Create checkout
             */
@@ -241,6 +250,9 @@ class BuildOrder
     {
         try{
             /* quote save */
+            if (!$quote) {
+                $quote = $this->checkoutSession->getQuote();
+            }
             $quote->setData(\PaysonAB\PaysonCheckout2\Model\ConfigInterface::CHECKOUT_ID_COLUMN, $checkoutId);
             $quote->save();
         } catch (\Exception $e){
@@ -359,7 +371,7 @@ class BuildOrder
         $model = $this->_paysoncheckoutQueue;
         try {
 
-            $quote = $this->_orderHelper->getQuote();
+            $quote = $this->_orderHelper->create()->getQuote();
             $paysonCheckoutId = $this->_createCheckoutId();
             $paysonResponse = $this->_paysonApi->GetCheckout($paysonCheckoutId);
             $this->_saveQuoteCheckoutId($quote, $paysonCheckoutId);
@@ -368,13 +380,13 @@ class BuildOrder
             if($collection->getFirstItem()->getId()) {
                 $model->load($collection->getFirstItem()->getId());
                 $model->setCheckoutId($paysonCheckoutId);
-                $model->setPaysonResponse($this->_orderHelper->convertToJson($paysonResponse));
+                $model->setPaysonResponse($this->_orderHelper->create()->convertToJson($paysonResponse));
             }
             $model->save();
             if(!$quote->getPayment()->getMethod()) {
                 $this->_savePaymentMethod($quote);
             }
-            $this->_orderHelper->updateCart($paysonCheckoutId);
+            $this->_orderHelper->create()->updateCart($paysonCheckoutId);
         } catch (\Exception $e) {
             $paysonLoggerHelper  = $this->_paysonHelper;
             $paysonLoggerHelper->error($e->getMessage());

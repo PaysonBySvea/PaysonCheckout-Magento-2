@@ -54,39 +54,42 @@ class CustomerLogin implements ObserverInterface
     public function execute(Observer $observer)
     {
         $customer = $observer->getEvent()->getCustomer();
-        $customerId = $customer->getDefaultShippingAddress()->getCustomerId();
-        /**
- * @var CustomerInterface $customer 
-*/
-        $customer = $this->_customerRepository->getById($customerId);
-        /**
- * @var Address $defaultAddress 
-*/
-        $defaultAddressId = $customer->getDefaultShipping();
-        /**
- * @var \Magento\Customer\Api\AddressRepositoryInterface $addressRepository 
-*/
-        try {
-            //This is our Customer Address
-            $defaultShippingAddress = $this->_addressRepository->getById($defaultAddressId);
-
-            //Convert the Customer Address to a Quote Address
-            //Using the ObjectManager is bad practice, use DI instead, but how?
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $customerId = $customer->getCustomerId();
+        if ($customerId) {
             /**
- * @var \Magento\Quote\Model\Quote\Address $quoteBillingAddress 
-*/
-            $quoteShippingAddress = $objectManager->create('Magento\Quote\Model\Quote\Address');
-            $quoteShippingAddress->importCustomerAddressData($defaultShippingAddress);
+             * @var CustomerInterface $customer 
+            */
+            $customer = $this->_customerRepository->getById($customerId);
+            /**
+             * @var Address $defaultAddress 
+            */
+            $defaultAddressId = $customer->getDefaultShipping();
+            /**
+             * @var \Magento\Customer\Api\AddressRepositoryInterface $addressRepository 
+            */
+            try {
+                //This is our Customer Address
+                $defaultShippingAddress = $this->_addressRepository->getById($defaultAddressId);
 
-            /*customer save using quote*/
-            $quote = $this->_orderHelper->getQuote();
-            $quote->setShippingAddress($quoteShippingAddress);
-            $quote->save();
-            return $this;
-        } catch (\Exception $e) {
-            $this->_paysonHelper->error($e->getMessage());
+                //Convert the Customer Address to a Quote Address
+                //Using the ObjectManager is bad practice, use DI instead, but how?
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                /**
+                 * @var \Magento\Quote\Model\Quote\Address $quoteBillingAddress 
+                */
+                $quoteShippingAddress = $objectManager->create('Magento\Quote\Model\Quote\Address');
+                $quoteShippingAddress->importCustomerAddressData($defaultShippingAddress);
+
+                /*customer save using quote*/
+                $quote = $this->_orderHelper->getQuote();
+                $quote->setShippingAddress($quoteShippingAddress);
+                $quote->save();
+                return $this;
+            } catch (\Exception $e) {
+                $this->_paysonHelper->error($e->getMessage());
+            }
         }
+
 
     }
 }
