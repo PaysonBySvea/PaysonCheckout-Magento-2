@@ -69,7 +69,7 @@ class DeleteOldResources
             try {
                 $collection->walk('delete');
             } catch (\Exception $e) {
-                $this->_paysonHelper->error($e->getMessage());
+                $this->_paysonHelper->debug($e->getMessage());
             }
         }
     }

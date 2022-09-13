@@ -23,7 +23,8 @@ class Notification
      */
     protected $_orderHelper;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -62,7 +63,7 @@ class Notification
      * @param \Magento\Framework\App\Response\Http                  $response
      * @param \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi         $paysonApi
      * @param \PaysonAB\PaysonCheckout2\Helper\Order                $orderHelper
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data                 $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger           $paysonHelper
      * @param \Magento\Framework\App\Config\ScopeConfigInterface    $scopeConfig
      * @param \Magento\Shipping\Model\Config                        $shipconfig
      * @param CreateOrder                                           $createOrder
@@ -76,7 +77,7 @@ class Notification
         \Magento\Framework\App\Response\Http $response,
         \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi $paysonApi,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Shipping\Model\Config $shipconfig,
         \PaysonAB\PaysonCheckout2\Model\Payment\CreateOrder $createOrder,
@@ -112,7 +113,8 @@ class Notification
             if ($order->getState() == \Magento\Sales\Model\Order::STATE_COMPLETE || $order->getState() == \Magento\Sales\Model\Order::STATE_CANCELED) {
                 return;
             }
-            $this->_paysonHelper->log('Order (' . $order->getIncrementId() . ') notified status update: ' . $checkout->status);
+            $this->_paysonHelper->info('Order (' . $order->getIncrementId() . ') notified status update: ' . $checkout->status);
+
 
 
             switch ($checkout->status) {
@@ -200,7 +202,7 @@ class Notification
             }
             $order->save();
         } catch (\Exception $e) {
-            $this->_paysonHelper->log($e->getMessage());
+            $this->_paysonHelper->info($e->getMessage());
         }
     }
 

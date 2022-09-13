@@ -20,7 +20,8 @@ class CreateOrder
      */
     protected $_response;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -66,7 +67,7 @@ class CreateOrder
 
     /**
      * CreateOrder constructor.
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper
      * @param \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper
      * @param \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig
      * @param \Magento\Framework\UrlInterface $url
@@ -84,7 +85,7 @@ class CreateOrder
      */
     public function __construct(
 
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig,
         \Magento\Framework\UrlInterface $url,
@@ -239,7 +240,7 @@ class CreateOrder
             }
 
         } catch (\Exception $e) {
-            $this->_paysonHelper->error($e->getMessage());
+            $this->_paysonHelper->debug($e->getMessage());
             return false;
         }
     }
@@ -264,7 +265,7 @@ class CreateOrder
             $model->save();
             /* Order information save in payson table end */
         } catch (\Exception $e) {
-            $this->_paysonHelper->error($e->getMessage());
+            $this->_paysonHelper->debug($e->getMessage());
         }
     }
 
@@ -286,7 +287,7 @@ class CreateOrder
             return $order;
         } catch (\Exception $e) {
             $paysonLoggerHelper = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
     }
 
@@ -315,7 +316,7 @@ class CreateOrder
                 $item->save();
             }
         }catch (\Exception $e) {
-             $this->_paysonHelper->error($e->getMessage());
+             $this->_paysonHelper->debug($e->getMessage());
         }
     }
 }

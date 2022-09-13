@@ -14,7 +14,8 @@ class Save
      */
     protected $_orderRepository;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -43,7 +44,7 @@ class Save
      *
      * @param \Magento\Framework\App\RequestInterface               $request
      * @param \Magento\Sales\Model\OrderRepository                  $orderRepository
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data                 $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger           $paysonHelper
      * @param \PaysonAB\PaysonCheckout2\Helper\Order                $orderHelper
      * @param \Magento\Sales\Model\Service\InvoiceService           $invoiceService
      * @param \Magento\Framework\DB\Transaction                     $transaction
@@ -54,7 +55,7 @@ class Save
     public function __construct(
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Sales\Model\OrderRepository $orderRepository,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
         \Magento\Framework\DB\Transaction $transaction,
@@ -129,7 +130,7 @@ class Save
             return $result;
 
         } catch (\Exception $e) {
-            $this->_paysonHelper->error($e->getMessage());
+            $this->_paysonHelper->debug($e->getMessage());
         }
     }
 }

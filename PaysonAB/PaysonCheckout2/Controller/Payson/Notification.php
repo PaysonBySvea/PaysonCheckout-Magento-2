@@ -19,7 +19,8 @@ class Notification extends \Magento\Framework\App\Action\Action
      */
     protected $_orderHelper;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -41,7 +42,7 @@ class Notification extends \Magento\Framework\App\Action\Action
      * @param \Magento\Framework\App\Action\Context                $context
      * @param \Magento\Framework\View\Result\PageFactory           $resultPageFactory
      * @param \PaysonAB\PaysonCheckout2\Helper\Order               $orderHelper
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data                $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger          $paysonHelper
      * @param \PaysonAB\PaysonCheckout2\Model\Payment\Notification $notification
      * @param \Magento\Sales\Model\OrderRepository                 $orderRepository
      * @param \PaysonAB\PaysonCheckout2\Model\Config               $paysonConfig
@@ -50,7 +51,7 @@ class Notification extends \Magento\Framework\App\Action\Action
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Model\Payment\Notification $notification,
         \Magento\Sales\Model\OrderRepository $orderRepository,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig
@@ -73,20 +74,19 @@ class Notification extends \Magento\Framework\App\Action\Action
     {
         if ($this->paysonConfig->isEnabled()) {
             $resultPage = $this->_resultPageFactory->create();
-            $paysonLoggerHelper = $this->_paysonHelper;
             try {
                 $quoteId = $this->getRequest()->getParam('id');
                 $paysonObject = $this->_orderHelper->getPaysonInfo($quoteId);
                 $paysonQuoteId = $paysonObject->getQuoteId();
                 $orderId = $paysonObject->getOrderId();
                 if (!$paysonQuoteId) {
-                    $this->_paysonHelper->log("Quote not found for queue ID `{$paysonObject->getPaysoncheckoutQueueId()}`");
+                    $this->_paysonHelper->info("Quote not found for queue ID `{$paysonObject->getPaysoncheckoutQueueId()}`");
                     $resultPage->setHttpResponseCode('503');
 
                     return false;
                 }
                 if (!$orderId) {
-                    $this->_paysonHelper->log("Order not found for queue ID `{$paysonObject->getPaysoncheckoutQueueId()}`");
+                    $this->_paysonHelper->info("Order not found for queue ID `{$paysonObject->getPaysoncheckoutQueueId()}`");
                     $resultPage->setHttpResponseCode('503');
                     return false;
                 }
@@ -94,7 +94,7 @@ class Notification extends \Magento\Framework\App\Action\Action
                 $order = $this->_orderRepository->get($orderId);
                 $this->_notification->process($order);
             } catch (\Exception $e) {
-                $paysonLoggerHelper->error($e->getMessage());
+                $this->_paysonHelper->debug($e->getMessage());
                 return false;
             }
         }

@@ -19,7 +19,7 @@ class BeforeShipment implements ObserverInterface
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\UrlInterface $url,
         \Magento\Framework\App\Response\Http $response,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper
     ) {
         $this->_request = $request;
         $this->_orderRepository = $orderRepository;
@@ -43,6 +43,7 @@ class BeforeShipment implements ObserverInterface
             $message = 'Order place with payson checkout you can not create multiple shipment.';
             foreach ($items as $item)
             {
+                $continue = false;
                 switch ($item->getProduct()->getTypeId()) {
                 case 'simple':
                     if($item->getParentItemId() == null) {
@@ -73,15 +74,17 @@ class BeforeShipment implements ObserverInterface
                         $this->_response->setRedirect($checkoutPaysonUrl)->sendResponse();
                         throw new \Exception($message);
                     }
-                    break;
                 case 'bundle':
-                    continue;
+                    $continue = true;
                         break;
                 default:
-                    continue;
+                    $continue = true;
                         break;
                 }
+                if($continue == true) {
+                    continue;
             }
         }
     }
+}
 }

@@ -30,14 +30,14 @@ class Index extends \Magento\Framework\View\Element\Template
      *
      * @param \Magento\Framework\View\Element\Template\Context   $context
      * @param \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi      $paysonApi
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data              $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger        $paysonHelper
      * @param \PaysonAB\PaysonCheckout2\Helper\Order             $orderHelper
      * @param \PaysonAB\PaysonCheckout2\Model\Payment\BuildOrder $buildOrder
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi $paysonApi,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
         \PaysonAB\PaysonCheckout2\Model\Payment\BuildOrder $buildOrder,
         \PaysonAB\PaysonCheckout2\Model\Config $config
@@ -66,8 +66,8 @@ class Index extends \Magento\Framework\View\Element\Template
             return false;
         } catch (\Exception $e) {
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->critical($e);
-            $paysonLoggerHelper->log($e->getMessage());
+            $paysonLoggerHelper->debug($e);
+            $paysonLoggerHelper->info($e->getMessage());
         }
     }
 

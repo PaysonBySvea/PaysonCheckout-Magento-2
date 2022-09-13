@@ -19,7 +19,8 @@ class EmptyCart extends \Magento\Framework\App\Action\Action
      */
     protected $_orderHelper;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -35,19 +36,19 @@ class EmptyCart extends \Magento\Framework\App\Action\Action
     /**
      * EmptyCart constructor.
      *
-     * @param \Magento\Framework\App\Action\Context      $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \PaysonAB\PaysonCheckout2\Helper\Order     $orderHelper
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data      $paysonHelper
-     * @param \Magento\Checkout\Model\Session            $checkoutSession
-     * @param \PaysonAB\PaysonCheckout2\Model\Config     $paysonConfig
+     * @param \Magento\Framework\App\Action\Context       $context
+     * @param \Magento\Framework\View\Result\PageFactory  $resultPageFactory
+     * @param \PaysonAB\PaysonCheckout2\Helper\Order      $orderHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper
+     * @param \Magento\Checkout\Model\Session             $checkoutSession
+     * @param \PaysonAB\PaysonCheckout2\Model\Config      $paysonConfig
      */
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \Magento\Checkout\Model\Session $checkoutSession,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig
     ) {
@@ -75,7 +76,7 @@ class EmptyCart extends \Magento\Framework\App\Action\Action
                 }
             }
         } catch (\Exception $e) {
-            $this->_paysonHelper->error($e->getMessage());
+            $this->_paysonHelper->debug($e->getMessage());
         }
         return $resultPage;
     }

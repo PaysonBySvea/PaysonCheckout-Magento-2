@@ -31,7 +31,7 @@ class CancelOrder extends Confirmation
             $session->clearQuote();
         } catch (\Exception $e) {
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
         return $resultPage;
     }

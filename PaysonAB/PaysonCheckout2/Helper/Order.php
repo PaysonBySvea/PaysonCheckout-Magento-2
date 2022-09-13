@@ -105,7 +105,8 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $_paysoncheckoutQueue;
     /**
-     * @var Data
+     * @var Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -171,7 +172,7 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \PaysonAB\PaysonCheckout2\Model\Api\Gui                  $gui
      * @param \PaysonAB\PaysonCheckout2\Model\Api\Checkout             $paysonCheckout
      * @param \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue      $paysoncheckoutQueue
-     * @param Data                                                     $paysonHelper
+     * @param DataLogger                                               $paysonHelper
      * @param \Magento\Framework\Stdlib\DateTime\DateTime              $date
      * @param \Magento\Customer\Api\Data\AddressInterfaceFactory       $addressInterfaceFactory
      * @param \Magento\Customer\Api\AddressRepositoryInterface         $addressRepositoryInterface
@@ -200,7 +201,7 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
         \PaysonAB\PaysonCheckout2\Model\Api\Gui $gui,
         \PaysonAB\PaysonCheckout2\Model\Api\Checkout $paysonCheckout,
         \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue $paysoncheckoutQueue,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
         \Magento\Customer\Api\Data\AddressInterfaceFactory $addressInterfaceFactory,
         \Magento\Customer\Api\AddressRepositoryInterface $addressRepositoryInterface,
@@ -732,7 +733,7 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
                 $this->_addressRepositoryInterface->save($address);
             }
             catch (\Exception $e) {
-                $this->_paysonHelper->error($e->getMessage());
+                $this->_paysonHelper->debug($e->getMessage());
             }
         }
     }
@@ -756,6 +757,12 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
      */
     private function _udateShippingAddress($paysonCustomer)
     {
+        $regionCollection = $this->_regionFactory->create()->getCollection()->addCountryFilter($paysonCustomer->countryCode);
+        $region_1 = $regionCollection->toOptionArray();
+        $this->_paysonHelper->info('Region_id_info');
+        $this->_paysonHelper->info($region_1[1]['value']);
+
+
         return array(
             'firstname' => $paysonCustomer->firstName,
             'lastname' => $paysonCustomer->lastName,
@@ -764,9 +771,10 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
             'postcode'=> $paysonCustomer->postalCode,
             'telephone' => $paysonCustomer->phone,
             'country_id' => $paysonCustomer->countryCode,
-            'region_id' => 1036
+            'region_id' => $region_1[1]['value']
         );
     }
+
 
     /**
      * @param $defaultAddress
@@ -804,7 +812,7 @@ class Order extends \Magento\Framework\App\Helper\AbstractHelper
             $paysoncheckoutCollection = $this->_paysoncheckoutQueue->load($quoteId, 'quote_id');
             return $paysoncheckoutCollection;
         } catch (\Exception $e) {
-            $this->_paysonHelper->error($e->getMessage());
+            $this->_paysonHelper->debug($e->getMessage());
         }
 
     }

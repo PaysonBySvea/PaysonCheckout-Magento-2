@@ -28,7 +28,8 @@ class BuildOrder
     */
     protected $_orderHelper;
     /**
-    * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
     */
     protected $_paysonHelper;
     /**
@@ -74,7 +75,7 @@ class BuildOrder
      * @param \Magento\Framework\App\Response\Http $response
      * @param \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi $paysonApi
      * @param \PaysonAB\PaysonCheckout2\Helper\OrderFactory $orderHelper
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $datetime
      * @param \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue $paysoncheckoutQueue
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -90,7 +91,7 @@ class BuildOrder
         \Magento\Framework\App\Response\Http $response,
         \PaysonAB\PaysonCheckout2\Model\Api\PaysonApi $paysonApi,
         \PaysonAB\PaysonCheckout2\Helper\OrderFactory $orderHelper,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \Magento\Framework\Stdlib\DateTime\DateTime $datetime,
         \PaysonAB\PaysonCheckout2\Model\PaysoncheckoutQueue $paysoncheckoutQueue,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -171,7 +172,7 @@ class BuildOrder
             }
         } catch (\Exception $e) {
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
     }
 
@@ -187,7 +188,7 @@ class BuildOrder
             $payment->save();
         } catch (\Exception $e){
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
     }
 
@@ -217,7 +218,7 @@ class BuildOrder
             $model->save();
         } catch (\Exception $e){
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
 
 
@@ -237,7 +238,7 @@ class BuildOrder
             return $paysonCheckoutId;
         } catch (\Exception $e){
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
 
     }
@@ -257,7 +258,7 @@ class BuildOrder
             $quote->save();
         } catch (\Exception $e){
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
     }
 
@@ -283,7 +284,7 @@ class BuildOrder
             }
         } catch (\Exception $e) {
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
     }
 
@@ -389,7 +390,7 @@ class BuildOrder
             $this->_orderHelper->create()->updateCart($paysonCheckoutId);
         } catch (\Exception $e) {
             $paysonLoggerHelper  = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         } 
     }
 }

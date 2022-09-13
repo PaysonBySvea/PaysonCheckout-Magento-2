@@ -9,7 +9,8 @@ namespace PaysonAB\PaysonCheckout2\Model\Payment;
 class CancelOrder
 {
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -36,7 +37,7 @@ class CancelOrder
     /**
      * CancelOrder constructor.
      *
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data               $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger         $paysonHelper
      * @param \PaysonAB\PaysonCheckout2\Helper\Order              $orderHelper
      * @param \Magento\Quote\Api\CartManagementInterface          $quoteManagement
      * @param \Magento\Sales\Model\OrderRepository                $orderRepository
@@ -45,7 +46,7 @@ class CancelOrder
      */
 
     public function __construct(
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
         \Magento\Quote\Api\CartManagementInterface $quoteManagement,
         \Magento\Sales\Model\OrderRepository $orderRepository,
@@ -104,7 +105,7 @@ class CancelOrder
             return $order->getId();
         } catch (\Exception $e) {
             $paysonLoggerHelper = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
     }
 
@@ -126,7 +127,7 @@ class CancelOrder
             return $order;
         } catch (\Exception $e) {
             $paysonLoggerHelper = $this->_paysonHelper;
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
     }
 }

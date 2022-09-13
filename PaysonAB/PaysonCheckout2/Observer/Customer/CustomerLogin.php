@@ -12,7 +12,8 @@ class CustomerLogin implements ObserverInterface
 {
 
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -31,13 +32,13 @@ class CustomerLogin implements ObserverInterface
     /**
      * CustomerLogin constructor.
      *
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data            $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger      $paysonHelper
      * @param \PaysonAB\PaysonCheckout2\Helper\Order           $orderHelper
      * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
      * @param CustomerRepositoryInterface                      $customerRepository
      */
     public function __construct(
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
         \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
         CustomerRepositoryInterface $customerRepository
@@ -86,7 +87,7 @@ class CustomerLogin implements ObserverInterface
                 $quote->save();
                 return $this;
             } catch (\Exception $e) {
-                $this->_paysonHelper->error($e->getMessage());
+                $this->_paysonHelper->debug($e->getMessage());
             }
         }
 

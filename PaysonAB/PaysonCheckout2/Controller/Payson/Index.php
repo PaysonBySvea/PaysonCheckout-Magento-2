@@ -27,7 +27,8 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $_response;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -49,7 +50,7 @@ class Index extends \Magento\Framework\App\Action\Action
      * @param \Magento\Framework\App\Action\Context              $context
      * @param \Magento\Framework\View\Result\PageFactory         $resultPageFactory
      * @param \PaysonAB\PaysonCheckout2\Helper\Order             $orderHelper
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data              $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger        $paysonHelper
      * @param \PaysonAB\PaysonCheckout2\Model\Config             $paysonConfig
      * @param \Magento\Framework\App\Response\Http               $response
      * @param \PaysonAB\PaysonCheckout2\Model\Payment\BuildOrder $buildOrder
@@ -59,7 +60,7 @@ class Index extends \Magento\Framework\App\Action\Action
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig,
         \Magento\Framework\App\Response\Http $response,
         \PaysonAB\PaysonCheckout2\Model\Payment\BuildOrder $buildOrder,
@@ -111,7 +112,7 @@ class Index extends \Magento\Framework\App\Action\Action
         } catch (\Exception $e) {
             $setBlock = $this->_view->getLayout()->getBlock($this->_blockName);
             $setBlock->setPaysonAuthError($e->getMessage());
-            $paysonLoggerHelper->log($e->getMessage());
+            $paysonLoggerHelper->info($e->getMessage());
             return $resultPage;
         }
     }

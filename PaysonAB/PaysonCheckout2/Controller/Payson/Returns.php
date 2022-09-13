@@ -8,7 +8,8 @@ namespace PaysonAB\PaysonCheckout2\Controller\Payson;
 class Returns extends \Magento\Framework\App\Action\Action
 {
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -36,7 +37,7 @@ class Returns extends \Magento\Framework\App\Action\Action
      * Returns constructor.
      *
      * @param \Magento\Framework\App\Action\Context               $context
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data               $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger         $paysonHelper
      * @param \PaysonAB\PaysonCheckout2\Helper\Order              $orderHelper
      * @param \PaysonAB\PaysonCheckout2\Model\Config              $paysonConfig
      * @param \PaysonAB\PaysonCheckout2\Model\Payment\CreateOrder $createOrder
@@ -46,7 +47,7 @@ class Returns extends \Magento\Framework\App\Action\Action
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig,
         \PaysonAB\PaysonCheckout2\Model\Payment\CreateOrder $createOrder,
@@ -88,7 +89,7 @@ class Returns extends \Magento\Framework\App\Action\Action
                 return false;
             }
         } catch (\Exception $e) {
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
             return false;
         }
     }

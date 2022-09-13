@@ -9,7 +9,8 @@ namespace PaysonAB\PaysonCheckout2\Helper;
 class Transaction
 {
     /**
-     * @var Data
+     * @var Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger (Deprecated)
      */
     protected $_paysonHelper;
     /**
@@ -24,7 +25,7 @@ class Transaction
      * @param \Magento\Sales\Model\Order\Payment\Transaction\Builder $builder
      */
     public function __construct(
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \Magento\Sales\Model\Order\Payment\Transaction\Builder $builder
     ) {
         $this->_paysonHelper = $paysonHelper;
@@ -67,7 +68,7 @@ class Transaction
 
             return  $transaction->save()->getTransactionId();
         } catch (\Exception $e) {
-            $this->_paysonHelper->log($e->getMessage());
+            $this->_paysonHelper->info($e->getMessage());
         }
     }
 
@@ -99,7 +100,7 @@ class Transaction
             $transaction->save();
 
         } catch (\Exception $e) {
-            $this->_paysonHelper->log($e->getMessage());
+            $this->_paysonHelper->info($e->getMessage());
         }
     }
 }

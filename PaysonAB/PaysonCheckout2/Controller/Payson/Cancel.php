@@ -15,7 +15,8 @@ class Cancel extends \Magento\Framework\App\Action\Action
      */
     protected $resultPageFactory;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     /**
@@ -47,7 +48,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
      * Cancel constructor.
      *
      * @param \Magento\Framework\App\Action\Context               $context
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data               $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger         $paysonHelper
      * @param \Magento\Framework\View\Result\PageFactory          $resultPageFactory
      * @param \PaysonAB\PaysonCheckout2\Model\Payment\CancelOrder $cancelOrder
      * @param \PaysonAB\PaysonCheckout2\Model\Config              $paysonConfig
@@ -57,7 +58,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \PaysonAB\PaysonCheckout2\Model\Payment\CancelOrder $cancelOrder,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig,
@@ -106,7 +107,7 @@ class Cancel extends \Magento\Framework\App\Action\Action
             }
             return $resultRedirect->setPath('/');
         }catch (\Exception $e) {
-            $paysonLoggerHelper->error($e->getMessage());
+            $paysonLoggerHelper->debug($e->getMessage());
         }
     }
 }

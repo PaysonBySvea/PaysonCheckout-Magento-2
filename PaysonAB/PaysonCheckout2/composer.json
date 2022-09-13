@@ -1,8 +1,8 @@
 {
-    "name": "paysonab/paysoncheckout2",
+    "name": "paysonab/module-paysoncheckout2",
     "description": "Payson Checkout 2.0 for M2",
 	"type": "magento2-module",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "license": [
         "OSL-3.0",
         "AFL-3.0"

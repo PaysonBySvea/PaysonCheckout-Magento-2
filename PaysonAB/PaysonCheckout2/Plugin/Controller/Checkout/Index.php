@@ -24,7 +24,8 @@ class Index
      */
     protected $_orderHelper;
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
     
@@ -41,7 +42,7 @@ class Index
         \Magento\Framework\App\Response\Http $response,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper
     ) {
         $this->_url = $url;
         $this->_response = $response;
@@ -60,7 +61,7 @@ class Index
                 $accountEmail = $valid->accountEmail;
             } catch(\Exception $e) {
                 $accountEmail = null;
-                $paysonLoggerHelper->error($e->getMessage());
+                $paysonLoggerHelper->debug($e->getMessage());
             }
             
             if ($accountEmail != null) {

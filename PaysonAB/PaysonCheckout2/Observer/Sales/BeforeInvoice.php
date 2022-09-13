@@ -21,7 +21,7 @@ class BeforeInvoice implements ObserverInterface
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\UrlInterface $url,
         \Magento\Framework\App\Response\Http $response,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper
     ) {
         $this->_request = $request;
         $this->_orderRepository = $orderRepository;

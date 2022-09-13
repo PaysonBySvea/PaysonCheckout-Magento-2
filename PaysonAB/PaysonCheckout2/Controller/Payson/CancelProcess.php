@@ -17,7 +17,8 @@ class CancelProcess extends \Magento\Framework\App\Action\Action
     protected $_paysonConfig;
 
     /**
-     * @var \PaysonAB\PaysonCheckout2\Helper\Data
+     * @var \PaysonAB\PaysonCheckout2\Helper\Data (Deprecated)
+     * @var \PaysonAB\PaysonCheckout2\Helper\DataLogger
      */
     protected $_paysonHelper;
 
@@ -34,16 +35,16 @@ class CancelProcess extends \Magento\Framework\App\Action\Action
     /**
      * Process constructor.
      *
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \PaysonAB\PaysonCheckout2\Model\Config     $paysonConfig
-     * @param \PaysonAB\PaysonCheckout2\Helper\Data      $paysonHelper
-     * @param \PaysonAB\PaysonCheckout2\Helper\Order     $orderHelper
-     * @param \Magento\Framework\App\Action\Context      $context
+     * @param \Magento\Framework\View\Result\PageFactory  $resultPageFactory
+     * @param \PaysonAB\PaysonCheckout2\Model\Config      $paysonConfig
+     * @param \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper
+     * @param \PaysonAB\PaysonCheckout2\Helper\Order      $orderHelper
+     * @param \Magento\Framework\App\Action\Context       $context
      */
     public function __construct(
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \PaysonAB\PaysonCheckout2\Model\Config $paysonConfig,
-        \PaysonAB\PaysonCheckout2\Helper\Data $paysonHelper,
+        \PaysonAB\PaysonCheckout2\Helper\DataLogger $paysonHelper,
         \PaysonAB\PaysonCheckout2\Helper\Order $orderHelper,
         \Magento\Framework\App\Action\Context $context
     ) {
@@ -86,7 +87,7 @@ class CancelProcess extends \Magento\Framework\App\Action\Action
             $resultRedirect = $this->resultRedirectFactory->create();
             return $resultRedirect->setPath('checkout/cart/', ['_current' => true, 'id' => null]);
         } catch (\Exception $e) {
-            $this->_paysonHelper->error($e->getMessage());
+            $this->_paysonHelper->debug($e->getMessage());
         }
     }
 }
